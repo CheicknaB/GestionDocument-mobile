@@ -1,0 +1,36 @@
+.contenu {
+    margin-bottom: 20px; /* Marge inférieure entre les cartes */
+  }
+  
+  .roles-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px; /* Espacement entre les rôles */
+  }
+  
+  .role-label {
+    font-size: 14px; 
+    padding: 4px 8px; 
+    border-radius: 20px; 
+  }
+  
+  .role-label.agent {
+    background-color: #646060; /* Couleur de fond pour le rôle admin */
+    color: #ffffff; /* Couleur du texte pour le rôle admin */
+  }
+
+  .role-label.caissier {
+    background-color: #f57d68; /* Couleur de fond pour le rôle admin */
+    color: #ffffff; /* Couleur du texte pour le rôle admin */
+  }
+  
+  .role-label.manager {
+    background-color: #609460; /* Couleur de fond pour le rôle manager */
+    color: #ffffff; /* Couleur du texte pour le rôle manager */
+  }
+  
+  .role-label.comptable {
+    background-color: #5791cf; /* Couleur de fond pour le rôle user */
+    color: #ffffff; /* Couleur du texte pour le rôle user */
+  }
+  

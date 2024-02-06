@@ -1,0 +1,301 @@
+<ion-header [translucent]="true">
+  <ion-header>
+    <!-- <ion-title>
+      Reçus
+    </ion-title> -->
+    <ion-toolbar>
+      <ion-row>
+        <ion-col>
+          <!-- Avatar à gauche -->
+          <ion-avatar>
+            <img src="assets/images/soabf_logo.png" alt="Avatar">
+          </ion-avatar>
+        </ion-col>
+        <ion-col>
+          <!-- Nom -->
+          <ion-label>
+            <h2>Cheickna Barro</h2>
+          </ion-label>
+          <!-- Matricule -->
+          <ion-label>
+            <p>1828743</p>
+          </ion-label>
+        </ion-col>
+      </ion-row>
+    </ion-toolbar>
+  </ion-header>
+  
+</ion-header>
+
+<ion-content style="background-color: rgb(160, 159, 181);">
+  <ion-row class="ion-text-center">
+    <ion-col class="colc">
+      <ion-card class="card-col">
+
+        <ion-label>Nouvelles Factures<br> </ion-label>
+        <ion-chip class="chip-number">
+          <ion-text class="impayees">
+            {{ listeEnCours ? listeEnCours.length : 'Chargement en cours...' }}
+          </ion-text>
+        </ion-chip>
+      </ion-card>
+    </ion-col>
+
+    <ion-col class="colc">
+      <ion-card class="card-col">
+        <ion-label>Factures non clôturées<br></ion-label>
+        <ion-chip class="chip-number">
+          <ion-text class="enCours">
+            {{ listeImpayees ? listeImpayees.length : 'Chargement en cours...' }}
+          </ion-text>
+        </ion-chip>
+      </ion-card>
+    </ion-col>
+
+
+  </ion-row>
+
+  <ion-segment value="default" [(ngModel)]="currentPage">
+    <ion-segment-button value="archives">
+      <ion-label>TRAITES</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="fAvalider">
+      <ion-label>A VALIDER</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="fEnCours">
+      <ion-label>EN COURS</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <!-- liste contenu -->
+  <ion-row *ngIf="currentPage == 'archives'">
+    <ion-card class="contenu">
+      <ion-list scrollable>
+        <ion-item color="light">
+          <ion-col>Date</ion-col>
+          <ion-col>Montant</ion-col>
+          <ion-col>Fournisseur</ion-col>
+          <ion-col></ion-col>
+        </ion-item>
+        <ion-item *ngFor="let element of listeRecus">
+          <ion-col>{{formatDate(element.dateCreation)}}</ion-col>
+          <ion-col class="amount">{{formatMontant(element.montantTotal)}}</ion-col>
+          <ion-col>{{element.fournisseur.libelle}}</ion-col>
+          <ion-col>
+            <ion-icon name="checkmark-done" style="color : #0ae43d; size: 14px;"></ion-icon>
+          </ion-col>
+          <ion-button (click)="setOpenDetails(element, true)" fill="clear">
+            <ion-icon name="eye"></ion-icon> Détails
+          </ion-button>
+        </ion-item>
+        
+      </ion-list>
+    </ion-card>
+  </ion-row>
+  <!-- fin liste contenu -->
+
+  <!-- factures impayées -->
+  <div *ngIf="currentPage == 'fEnCours'">
+    <ion-row>
+      <ion-card class="contenu">
+        <ion-list scrollable>
+          <ion-item color="light">
+            <ion-col>Date</ion-col>
+            <ion-col>Montant</ion-col>
+            <ion-col>Agent</ion-col>
+            <ion-col>Actions</ion-col>
+          </ion-item>
+          <ion-item *ngFor="let element of listeImpayees">
+            <ion-col>{{formatDate(element.dateCreation)}}</ion-col>
+            <ion-col class="amount">{{formatMontant(element.montantTotal)}}</ion-col>
+            <ion-col>{{element.utilisateur.prenom}}</ion-col>
+            <ion-col class="on-align-items-center ion-justify-content-between">
+              <ion-button (click)="validerFacture(element, 'enCours')" fill="clear"><ion-icon name="checkmark"></ion-icon></ion-button>
+              <ion-button (click)="setOpen(element,true)"><ion-icon name="wallet"></ion-icon></ion-button>
+            </ion-col>
+          </ion-item>
+        </ion-list>
+      </ion-card>
+    </ion-row>
+
+    <ion-modal [isOpen]="isModalOpen">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Paiement</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="setOpen('',false)">Fermer</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Détails de la facture</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-row>
+                <ion-col>Date</ion-col>
+                <ion-col style="color:white">{{formatDate(element.dateCreation)}}</ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>Facture</ion-col>
+                <ion-col style="color:white">{{element.numeroFacture}}</ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>Fournisseur</ion-col>
+                <ion-col style="color:white">{{element.fournisseur.libelle}}</ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>Montant</ion-col>
+                <ion-col style="color:white">{{formatMontant(element.montantTotal)}} CFA</ion-col>
+              </ion-row>
+            </ion-card-content>
+            <ion-row class="ion-text-center">
+              <ion-col>
+                <ion-item class="custom-input">
+                  <ion-label position="stacked">Montant</ion-label>
+                  <ion-input type="number" [(ngModel)]="montant" name="montant"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            <ion-row class="ion-text-center">
+              <ion-col>
+                <ion-item class="custom-input">
+                  <ion-label position="stacked">Joindre le reçu</ion-label>
+                  <ion-input type="file"></ion-input>
+                </ion-item>
+              </ion-col>
+            </ion-row>
+            
+            <ion-row>
+              <ion-col >
+                <ion-button (click)="getMontant(element)" class="ion-padding">Confirmer paiement</ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-card>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+
+  </div>
+  <!-- fin factures impayées -->
+
+
+  <!-- factures en cours de paiement  -->
+  <div *ngIf="currentPage == 'fAvalider'">
+    <ion-row class="ion-justify-content-around">
+      <ion-card *ngFor="let elementEnCours of listeEnCours" class="custom-card">
+        <ion-card-header>
+          <ion-row class="ion-align-items-start">
+            <ion-col size="6">
+              <ion-label>{{ formatDate(elementEnCours.dateCreation) }}</ion-label>
+            </ion-col>
+            <ion-col size="6" class="ion-text-end">
+              <ion-label>{{ elementEnCours.utilisateur.prenom }} {{ elementEnCours.utilisateur.nom }}</ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-card-header>
+        <ion-card-content>
+          <ion-label >État: {{ elementEnCours.etat }}</ion-label>
+        </ion-card-content>
+        <ion-card-content>
+          <ion-label>Montant: <span class="amount">{{ formatMontant(elementEnCours.montantTotal) }} FCFA</span></ion-label>
+        </ion-card-content>
+        <ion-card-content>
+          <ion-label>Fournisseur: <span style="color: #fff; font-size: 16px;">{{ elementEnCours.fournisseur.libelle}} {{elementEnCours.fournisseur.contact}}</span></ion-label>
+        </ion-card-content>
+        <ion-row class="action-buttons">
+          <ion-button (click)="setOpenDetails(elementEnCours, true)" fill="clear">
+            <ion-icon name="eye"></ion-icon> Détails
+          </ion-button>
+          <ion-button (click)="validerFacture(elementEnCours, 'fAvalider')" fill="clear">
+            <ion-icon name="checkmark" ></ion-icon> Valider
+          </ion-button>
+        </ion-row>
+      </ion-card>
+    </ion-row>
+    
+  </div>
+
+  <div *ngIf="currentPage == 'fAvalider' || currentPage == 'archives'">
+    <!-- voir détails paiements -->
+    <ion-modal [isOpen]="isModalDetailsOpen">
+      <ng-template>
+        <ion-header>
+          <ion-toolbar>
+            <ion-title>Détails paiements</ion-title>
+            <ion-buttons slot="end">
+              <ion-button (click)="setOpenDetails('',false)">Fermer</ion-button>
+            </ion-buttons>
+          </ion-toolbar>
+        </ion-header>
+        <ion-content class="ion-padding">
+          <ion-card>
+            <ion-card-header>
+              <ion-card-title>Détails paiements</ion-card-title>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-row>
+                <ion-col>Date</ion-col>
+                <ion-col>{{elementDetail.dateCreation}}</ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>Facture</ion-col>
+                <ion-col>{{elementDetail.numeroFacture}}</ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>Fournisseur</ion-col>
+                <ion-col>{{elementDetail.fournisseur.libelle}}</ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>Montant</ion-col>
+                <ion-col>{{elementDetail.montantTotal}}</ion-col>
+              </ion-row>
+              <ion-row>
+                <ion-col>Agent</ion-col>
+                <ion-col>{{elementDetail.utilisateur.prenom}}</ion-col>
+              </ion-row>
+              <ion-item *ngFor="let paiement of elementDetail.paiements">
+                <ion-row>
+                  <ion-col>date</ion-col>
+                  <ion-col>{{paiement.date}}</ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>montant</ion-col>
+                  <ion-col>{{paiement.montant}}</ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-img src="assets/images/recu1.jpg" alt="document"></ion-img>
+                </ion-row>
+              </ion-item>
+              <ion-item *ngFor="let paiement of elementDetail.paiements">
+                <ion-row>
+                  <ion-col>Date</ion-col>
+                  <ion-col>{{ formatDate(paiement.datePaiement) }}</ion-col>
+                </ion-row>
+                <ion-row>
+                  <ion-col>Montant</ion-col>
+                  <ion-col>{{ formatMontant(paiement.montant )}}</ion-col>
+                </ion-row>
+                <!-- Vérifier si un reçu est associé au paiement -->
+                <ion-row *ngIf="paiement.recu">
+                  <ion-col>Reçu</ion-col>
+                  <!-- Afficher l'image du reçu -->
+                  <ion-col>
+                    <ion-img [src]="paiement.recu.image" alt="Reçu"></ion-img>
+                  </ion-col>
+                </ion-row>
+              </ion-item>
+              
+            </ion-card-content>
+          </ion-card>
+        </ion-content>
+      </ng-template>
+    </ion-modal>
+    <!-- fin détails paiements -->
+
+  </div>
+  <!-- fin factures en cours de paiement  -->
+  <div class="ctnt"></div>
+</ion-content>

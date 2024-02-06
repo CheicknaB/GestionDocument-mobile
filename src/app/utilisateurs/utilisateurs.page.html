@@ -1,0 +1,88 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-row>
+      <ion-col>
+        <!-- Avatar à gauche -->
+        <ion-avatar>
+          <img src="assets/images/avatar.png" alt="Avatar">
+        </ion-avatar>
+      </ion-col>
+      <ion-col>
+        <!-- Nom -->
+        <ion-label>
+          <h2>Cheickna Barro</h2>
+        </ion-label>
+        <!-- Matricule -->
+        <ion-label>
+          <p>1828743</p>
+        </ion-label>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-segment value="default" [(ngModel)]="currentPage">
+    <ion-segment-button value="enregistrer">
+      <ion-label>Enregistrer</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="listeUsers">
+      <ion-label>Utilisateurs</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <ion-card *ngIf="currentPage == 'enregistrer' ">
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="floating">Nom</ion-label>
+        <ion-input name="nom" [(ngModel)]="utilisateur.nom" required></ion-input>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label position="floating">Prénom</ion-label>
+        <ion-input name="prenom" [(ngModel)]="utilisateur.prenom" required></ion-input>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label position="floating">Email</ion-label>
+        <ion-input name="email" [(ngModel)]="utilisateur.email" type="email" required></ion-input>
+      </ion-item>
+  
+      <ion-item>
+        <ion-label position="floating">Mot de passe</ion-label>
+        <ion-input name="motDePasse" [(ngModel)]="utilisateur.password" type="password" required></ion-input>
+      </ion-item>
+  
+      <!-- Assurez-vous que votre objet utilisateur a un tableau de rôles -->
+      <ion-item>
+        <ion-label>Role</ion-label>
+        <ion-select name="role" [(ngModel)]="utilisateur.roles" required multiple="true">
+          <ion-select-option [value]="role" *ngFor="let role of listeRoles">{{role.libelle}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+  
+      <ion-button expand="full" (click)="handleAddUser()">Ajouter</ion-button>
+    </ion-card-content>
+  </ion-card>
+  
+
+  <div *ngIf="currentPage == 'listeUsers'">
+    <ion-row>
+      <ion-col size="12" *ngFor="let utilisateur of listeUtilisateurs">
+        <ion-card class="contenu">
+          <ion-card-header>
+            <ion-card-title>{{ utilisateur.nom }} {{ utilisateur.prenom }}</ion-card-title>
+          </ion-card-header>
+          <ion-card-content>
+            <div class="roles-container">
+              <span class="role-label" [ngClass]="role.libelle" *ngFor="let role of utilisateur.roles">{{ role.libelle }}</span>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </div>
+  
+  
+
+</ion-content>

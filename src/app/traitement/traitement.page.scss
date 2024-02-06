@@ -4,7 +4,9 @@
     margin: auto;
     padding: 10px;
 }
-
+.ctnt{
+    margin-bottom: 60px;
+}
 .colc{
     padding:10px;
     margin-top: 7px;
@@ -20,7 +22,7 @@
 
 ion-label{
     color: bisque;
-    font-size: 12px;
+    font-size: 14xpx;
 }
   
 
@@ -56,4 +58,34 @@ font-size: 24px;
       --placeholder-color: var(--placeholder-color);
     }
   }
+  
+  .custom-card {
+    width: 100%;
+    background-color: #3b2a1a; /* Fond sombre */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px; /* Espacement entre les cartes */
+    color: #ffffff; /* Texte blanc */
+  }
+  
+  .custom-card ion-card-header {
+    background-color: #3a3e49; /* Couleur d'en-tête légèrement plus claire */
+  }
+  
+  .custom-card ion-card-content {
+    padding: 10px;
+  }
+  
+  .amount {
+    color: #f08030; /* Couleur du montant en vert clair */
+    font-size:16px;
+    font-weight:bold;
+  }
+  
+  .custom-card ion-row.action-buttons ion-button {
+    color: #5e6578; /* Couleur du texte des boutons */
+  }
+  
+  
+  
   

@@ -1,17 +1,56 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-title>
-      Tab 2
+      Acceuil
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content>
+  <!-- <ion-grid> -->
+    <ion-row class="ion-text-center">
+      <ion-col class="colc" >
+        <ion-card class="card-col">
+          
+          <ion-label>DOCS <br> VALIDES</ion-label>
+         <ion-chip class="chip-number">
+          <ion-text class="nonValideValue">554</ion-text>
+        </ion-chip> 
+        </ion-card>
+      </ion-col>
 
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+      <ion-col class="colc" >
+        <ion-card class="card-col">
+          <ion-label>EN <br>ATTENTE</ion-label>
+         <ion-chip class="chip-number"><ion-text class="enAttenteValue">5</ion-text></ion-chip> 
+        </ion-card>
+      </ion-col>
+
+      <ion-col class="colc" >
+        <ion-card class="card-col">
+          <ion-label>DOCS REJETES</ion-label>
+         <ion-chip class="chip-number"><ion-text class="rejeteValue">6</ion-text></ion-chip> 
+        </ion-card></ion-col>
+    </ion-row>
+  <!-- </ion-grid> -->
+
+  <!-- liste contenu -->
+    <ion-row >
+      <ion-card class="contenu">
+        <ion-list >
+          <ion-item >
+            <ion-col>Date</ion-col>
+            <ion-col>Nom</ion-col>
+            <ion-col>Fournisseur</ion-col>
+          </ion-item>
+          <ion-item *ngFor="let element of liste" >
+            <ion-col >{{element.date}}</ion-col>
+            <ion-col>{{element.nom}}</ion-col>
+            <ion-col>{{element.fournisseur}}</ion-col>
+          </ion-item >
+        </ion-list>
+      </ion-card>
+    </ion-row> 
+  <!-- fin liste contenu -->
+
 </ion-content>
