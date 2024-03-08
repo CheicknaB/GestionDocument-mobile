@@ -24,15 +24,15 @@
       </ion-row>
     </ion-toolbar>
   </ion-header>
-  
-</ion-header>
 
+ 
+</ion-header>
 <ion-content style="background-color: rgb(160, 159, 181);">
   <ion-row class="ion-text-center">
     <ion-col class="colc">
       <ion-card class="card-col">
 
-        <ion-label>Nouvelles Factures<br> </ion-label>
+        <ion-label color="dark">Nouvelles Factures<br> </ion-label>
         <ion-chip class="chip-number">
           <ion-text class="impayees">
             {{ listeEnCours ? listeEnCours.length : 'Chargement en cours...' }}
@@ -80,7 +80,7 @@
         <ion-item *ngFor="let element of listeRecus">
           <ion-col>{{formatDate(element.dateCreation)}}</ion-col>
           <ion-col class="amount">{{formatMontant(element.montantTotal)}}</ion-col>
-          <ion-col>{{element.fournisseur.libelle}}</ion-col>
+          <ion-col *ngIf="element.fournisseur">{{element.fournisseur.libelle}}</ion-col>
           <ion-col>
             <ion-icon name="checkmark-done" style="color : #0ae43d; size: 14px;"></ion-icon>
           </ion-col>
@@ -108,7 +108,7 @@
           <ion-item *ngFor="let element of listeImpayees">
             <ion-col>{{formatDate(element.dateCreation)}}</ion-col>
             <ion-col class="amount">{{formatMontant(element.montantTotal)}}</ion-col>
-            <ion-col>{{element.utilisateur.prenom}}</ion-col>
+            <ion-col>{{element.utilisateur.username}}</ion-col>
             <ion-col class="on-align-items-center ion-justify-content-between">
               <ion-button (click)="validerFacture(element, 'enCours')" fill="clear"><ion-icon name="checkmark"></ion-icon></ion-button>
               <ion-button (click)="setOpen(element,true)"><ion-icon name="wallet"></ion-icon></ion-button>
@@ -246,7 +246,7 @@
               </ion-row>
               <ion-row>
                 <ion-col>Fournisseur</ion-col>
-                <ion-col>{{elementDetail.fournisseur.libelle}}</ion-col>
+                <ion-col *ngIf="elementDetail.fournisseur">{{elementDetail.fournisseur.libelle}}</ion-col>
               </ion-row>
               <ion-row>
                 <ion-col>Montant</ion-col>
@@ -256,37 +256,25 @@
                 <ion-col>Agent</ion-col>
                 <ion-col>{{elementDetail.utilisateur.prenom}}</ion-col>
               </ion-row>
-              <ion-item *ngFor="let paiement of elementDetail.paiements">
+              <ion-row *ngIf="elementDetail.fileName">
+                <img [src]="urlFichiers+'no_token/'+elementDetail.fileName">
+                <!-- <ion-img [src]="elementDetail.filePath" alt="document"></ion-img> -->
+              </ion-row >
+              <br> <br>
+              
+              <h5 *ngIf="elementDetail.paiements" >Motifs de paiement</h5>
+              <ion-row *ngFor="let paiement of elementDetail.paiements">
                 <ion-row>
-                  <ion-col>date</ion-col>
-                  <ion-col>{{paiement.date}}</ion-col>
+                  <ion-col>Date: {{ formatDate(paiement.datePaiement) }}</ion-col>
                 </ion-row>
                 <ion-row>
-                  <ion-col>montant</ion-col>
-                  <ion-col>{{paiement.montant}}</ion-col>
+                  <ion-col>Montant: {{ formatMontant(paiement.montant) }}</ion-col>
                 </ion-row>
-                <ion-row>
-                  <ion-img src="assets/images/recu1.jpg" alt="document"></ion-img>
-                </ion-row>
-              </ion-item>
-              <ion-item *ngFor="let paiement of elementDetail.paiements">
-                <ion-row>
-                  <ion-col>Date</ion-col>
-                  <ion-col>{{ formatDate(paiement.datePaiement) }}</ion-col>
-                </ion-row>
-                <ion-row>
-                  <ion-col>Montant</ion-col>
-                  <ion-col>{{ formatMontant(paiement.montant )}}</ion-col>
-                </ion-row>
-                <!-- Vérifier si un reçu est associé au paiement -->
+
                 <ion-row *ngIf="paiement.recu">
-                  <ion-col>Reçu</ion-col>
-                  <!-- Afficher l'image du reçu -->
-                  <ion-col>
-                    <ion-img [src]="paiement.recu.image" alt="Reçu"></ion-img>
-                  </ion-col>
+                  <ion-img [src]="urlFichiers+'no_token/'+paiement.recu.recuName" alt="Reçu" style="width: 100%; max-height: 300px;"></ion-img>
                 </ion-row>
-              </ion-item>
+              </ion-row>
               
             </ion-card-content>
           </ion-card>

@@ -3,10 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
 
 const routes: Routes = [
+
+
   {
     path: 'tabs',
     component: TabsPage,
     children: [
+     
       {
         path: 'tab1',
         loadChildren: () => import('../tab1/tab1.module').then(m => m.Tab1PageModule)
@@ -27,16 +30,20 @@ const routes: Routes = [
         path: 'traitement',
         loadChildren: () => import('../traitement/traitement.module').then(m => m.TraitementPageModule)
       },
-      {
-        path: '',
-        redirectTo: '/tabs/tab1',
-        pathMatch: 'full'
-      }
+      // {
+      //   path: 'acceuil',
+      //   loadChildren: () => import('../tabs/tabs.module').then(m => m.TabsPageModule)
+      // },
+      // {
+      //   path: '',
+      //   redirectTo: '/traitement',
+      //   pathMatch: 'full'
+      // }
     ]
   },
   {
-    path: '',
-    redirectTo: '/tabs/tab1',
+    path: 'tabs',
+    redirectTo: '/traitement', // Rediriger vers la page de traitement par défaut
     pathMatch: 'full'
   }
 ];

@@ -1,21 +1,19 @@
 import { Fournisseur } from "./fournisseur";
 import { User } from "./user";
 
-export class Document {
+export class FactureDto {
   id!: number;
   bytes!: number[];
   montantTotal!: number;
   numeroFacture!: number;
   file!: File | string;
   name!: string;
-  reste: number = 0;
   type!: string;
-  etat!: string;
+  reste: number = 0;
   base64Image!: string;
-  extension!: string;
+  etat!: string;
   fournisseur!: Fournisseur;
   utilisateur!: User;
   filePath!: string;
-  fileName!: string;
   // agent!: User;
 }

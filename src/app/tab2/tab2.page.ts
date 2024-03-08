@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { User } from '../shared/models/user';
+import { AuthentificationService } from '../shared/services/authentification.service';
 
 @Component({
   selector: 'app-tab2',
@@ -8,11 +10,18 @@ import { Component, OnInit } from '@angular/core';
 export class Tab2Page implements OnInit {
   
   liste : any;
-
-  constructor() {}
+  currentUser : User;
+  constructor(private authService : AuthentificationService) {
+    this.currentUser = this.authService.utilisateur;
+  }
 
   ngOnInit(): void {
+    this.currentUser = this.authService.utilisateur;
     this.chargerListe();
+  }
+
+  hasRole(roleName: string): boolean {
+    return this.currentUser.roles.some((role: any) => role.libelle === roleName);
   }
 
   chargerListe(){

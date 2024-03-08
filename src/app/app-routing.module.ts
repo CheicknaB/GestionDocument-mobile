@@ -1,19 +1,22 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { TabsPage } from './tabs/tabs.page';
 
 const routes: Routes = [
   {
     path: '',
+    loadChildren: () => import('./authentification/authentification.module').then( m => m.AuthentificationPageModule)
+  },
+  {
+    path: 'tabs',
+    component: TabsPage,
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
   },
   {
-    path: 'utilisateurs',
-    loadChildren: () => import('./utilisateurs/utilisateurs.module').then( m => m.UtilisateursPageModule)
-  },
-  {
-    path: 'traitement',
-    loadChildren: () => import('./traitement/traitement.module').then( m => m.TraitementPageModule)
+    path: 'authentification',
+    loadChildren: () => import('./authentification/authentification.module').then( m => m.AuthentificationPageModule)
   }
+  // { path: 'tabs', component: TabsPage },
 ];
 @NgModule({
   imports: [

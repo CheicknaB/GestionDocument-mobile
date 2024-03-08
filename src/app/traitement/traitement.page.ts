@@ -3,6 +3,9 @@ import { PaymentModalComponent } from '../payment-modal/payment-modal.component'
 import { AlertController, ModalController } from '@ionic/angular';
 import { DocumentService } from '../shared/services/document.service';
 import { Paiement } from '../shared/models/paiement';
+import { environment } from 'src/environments/environment';
+import { AuthentificationService } from '../shared/services/authentification.service';
+import { User } from '../shared/models/user';
 
 @Component({
   selector: 'app-traitement',
@@ -14,10 +17,12 @@ export class TraitementPage implements OnInit {
 
 
   montant: any;
-
+  currentUser : User;
   listeRecus: any;
+  imageBlob!: Blob;
   paiement! : Paiement;
   listeEnCours: any;
+  urlFichiers : any;
   listeImpayees: any;
   statusFactures = ['VALIDER', 'ORDONNER LE PAIEMENT', 'REJETER', 'METTRE EN ATTENTE'];
   statusFacturesEnCours = ['VALIDER', 'METTRE EN ATTENTE', 'ANNULER'];
@@ -26,12 +31,34 @@ export class TraitementPage implements OnInit {
 
   constructor(private modalController: ModalController,
     private documentService: DocumentService,
-    public alertController: AlertController) { }
+    public alertController: AlertController,
+    private authService : AuthentificationService) { 
+      this.currentUser = this.authService.utilisateur;
+    }
+
   ngOnInit(): void {
+    this.currentUser = this.authService.utilisateur;
+    this.urlFichiers = environment.urlFichiers
     this.chargerListe();
   }
 
-  formatDate(dateString: string): string {
+  hasRole(roleName: string): boolean {
+    return this.currentUser.roles.some((role: any) => role.libelle === roleName);
+  }
+
+  getImageUrlWithHeaders(imageName : string) {
+   
+    this.documentService.getFichier(imageName).subscribe({
+      next : (data) => {
+        console.log("fichier retourné ===> ",data)
+      },
+      error: (error) => {
+        console.log("errreur lors de la recupération du fichier ", error.error)
+      }
+    })
+  }
+
+  formatDate(dateString : string): string {
     const dateObject = new Date(dateString);
     const formattedDate = dateObject.toLocaleDateString('fr-FR', { year: 'numeric', month: '2-digit', day: '2-digit' });
     return formattedDate;
@@ -177,16 +204,35 @@ export class TraitementPage implements OnInit {
     else return "";
   }
 
-  chargerListe() {
+  getFichier(fileName: string): any {
+     this.documentService.getFile(fileName).subscribe({
+      next:(data : any) => {
+        this.imageBlob = data ;
+        this.elementDetail.filePath = URL.createObjectURL(this.imageBlob);
+        console.log("affichage de limage du document ", this.elementDetail.filePath)
+      },
+      error: (error : any) => {
+        console.log("erreur lors de la recuperation de limage du document ",error.error)
+      }
+    })
+  }
+  
+  getImageUrl(blob: Blob): string {
+    return URL.createObjectURL(blob);
+  }
+  
 
+  chargerListe() {
+   
     this.documentService.getFacturesByStatut("SOUMIS").subscribe({
+    
       next: (data: any) => {
         this.listeEnCours = data;
         console.log("factures à valider ...")
         
       },
       error: (error: any) => {
-        console.log("Erreur lors de la recupération des factures à valider ===> " + error.error.error);
+        console.log("Erreur lors de la recupération des factures à valider ===> " + error.error);
       }
     })
 
@@ -241,6 +287,7 @@ export class TraitementPage implements OnInit {
 
 
   async openPaymentModal(element: any) {
+
     const modal = await this.modalController.create({
       component: PaymentModalComponent,
       componentProps: {
@@ -255,6 +302,7 @@ export class TraitementPage implements OnInit {
       }
     });
     await modal.present();
+
   }
 
   isModalOpen = false;
@@ -269,7 +317,7 @@ export class TraitementPage implements OnInit {
   }
 
   setOpenDetails(data: any, isOpen: boolean) {
-    
+    this.getFichier(data.fileName)
     this.handleGetPaiementsByFacture(data.id).subscribe({
       next:(listePaiements) => {
         this.elementDetail.paiements = listePaiements;

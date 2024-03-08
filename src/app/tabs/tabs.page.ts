@@ -15,11 +15,12 @@ export class TabsPage implements OnInit{
 
   buildMenu(){
     this.menus = [
-      {nom:"Documents", icon:"document-text", route:"tab1"},
-      {nom:"Acceuil", icon:"home", route:"tab2"},
-      {nom:"Paiements", icon:"receipt", route:"tab3"},
-      {nom:"Utilisateurs", icon:"people", route:"utilisateurs"},
-      {nom:"Validations", icon:"people", route:"traitement"},
+      {nom:"Documents", icon:"document-text", route:"tabs/tab1"},
+      {nom:"Acceuil", icon:"home", route:"tabs/tab2"},
+      {nom:"Paiements", icon:"receipt", route:"tabs/tab3"},
+      {nom:"Utilisateurs", icon:"people", route:"tabs/utilisateurs"},
+      {nom:"Validations", icon:"people", route:"tabs/traitement"},
+      // {nom:"authentification", icon:"people", route:"authentification"},
     ]
   }
 

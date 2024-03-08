@@ -45,6 +45,15 @@
         </ion-select>
       </ion-item>
 
+      <ion-item *ngIf="document.type !== 'facture'">
+        <ion-select placeholder="choisir la facture" [(ngModel)]="factureAPayer">
+          <ion-label position="floating" type="number">Facture</ion-label>
+          <ion-select-option [value]="facture"
+            *ngFor="let facture of factures">{{facture.numeroFacture}} {{facture.etat}}</ion-select-option>
+        </ion-select>
+        <img *ngIf="factureAPayer" [src]="urlFichiers+factureAPayer.fileName">
+      </ion-item>
+
       <ion-item>
         <!-- <ion-label position="floating">Joindre le document</ion-label> -->
         <input (input)="onFileSelected($event)" type="file" class="ion-input" >
